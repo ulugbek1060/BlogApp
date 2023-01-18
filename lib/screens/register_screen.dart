@@ -1,3 +1,4 @@
+import 'package:blog_app/app_state.dart';
 import 'package:blog_app/utils/debuging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,48 +22,55 @@ class RegisterScreen extends HookWidget {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Log in'),
+        title: const Text('Sign up'),
       ),
-      body: Column(
-        children: [
-          TextField(
-            controller: emailController,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: 'Enter your email here...',
-            ),
-          ),
-          TextField(
-            obscureText: true,
-            controller: passwordController,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: 'Enter your password here...',
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              final email = emailController.text;
-              final password = passwordController.text;
-              context.read<AppBloc>().add(
-                    AppEventRegister(
-                      email: email,
-                      password: password,
-                    ),
-                  );
-            },
-            child: const Text('Register'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.read<AppBloc>().add(
-                    const AppEventGoToLogin(),
-                  );
-            },
-            child: const Text('Already registered? Log in here!'),
-          )
-        ],
+      body: BlocConsumer<AppBloc, AppState>(
+        listener: (context, state) {
+          if (state.user != null) {
+            Navigator.of(context).pop();
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            children: [
+              TextField(
+                controller: emailController,
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your email here...',
+                ),
+              ),
+              TextField(
+                obscureText: true,
+                controller: passwordController,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your password here...',
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  final email = emailController.text;
+                  final password = passwordController.text;
+                  context.read<AppBloc>().add(
+                        AppEventRegister(
+                          email: email,
+                          password: password,
+                        ),
+                      );
+                },
+                child: const Text('Register'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Already registered? Log in here!'),
+              )
+            ],
+          );
+        },
       ),
     );
   }
