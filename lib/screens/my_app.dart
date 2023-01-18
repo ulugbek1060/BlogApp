@@ -26,38 +26,50 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BlocConsumer<AppBloc, AppState>(
-          listener: (context, state) {
-            // handle loading
-            if (state.isLoading) {
-              LoadingScreen.instance().show(
-                context: context,
-                text: 'Loading...',
-              );
-            } else {
-              LoadingScreen.instance().hide();
-            }
-            //handle errors
-            if (state.error != null) {
-              showAuthError(
-                context: context,
-                error: state.error!,
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is AppStateLoggedIn) {
-              return const BlogScreen();
-            } else if (state is AppStateLoggetOut) {
-              return const LoginScreen();
-            } else if (state is AppStateIsInRegistrationView) {
-              return const RegisterScreen();
-            } else {
-              return Container();
-            }
-          },
-        ),
+        routes: {
+          '/': (_) => const HomePage(),
+          RegisterScreen.routeName: (_) => const RegisterScreen()
+        },
       ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AppBloc, AppState>(
+      listener: (context, state) {
+        // handle loading
+        if (state.isLoading) {
+          LoadingScreen.instance().show(
+            context: context,
+            text: 'Loading...',
+          );
+        } else {
+          LoadingScreen.instance().hide();
+        }
+        //handle errors
+        if (state.error != null) {
+          showAuthError(
+            context: context,
+            error: state.error!,
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is AppStateLoggedIn) {
+          return const BlogScreen();
+        } else if (state is AppStateLoggetOut) {
+          return const LoginScreen();
+        } else {
+          return Container();
+        }
+      },
     );
   }
 }

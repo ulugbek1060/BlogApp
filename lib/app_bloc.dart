@@ -61,17 +61,14 @@ class AppBloc extends Bloc<AppEvetn, AppState> {
       final password = event.password;
 
       try {
-        final credentials = FirebaseAuth.instance
-          ..createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-
-        // // get user images
-        // final uid = credentials.currentUser!.uid;
+        final credentials =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
 
         emit(AppStateLoggedIn(
-          user: credentials.currentUser!,
+          user: credentials.user!,
           images: const [],
           isLoading: false,
         ));
